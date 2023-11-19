@@ -4,10 +4,17 @@ import numpy as np
 import glob
 from tqdm import tqdm
 
+Na_slice = ( slice( 70, -71 ), slice(  2,  -3 ) )
+Co_slice = ( slice( 70, -71 ), slice(  2,  -3 ) )
+Sr_slice = ( slice( None ),    slice( None ) )
+Co_slice = ( slice( 44, -45 ), slice(  2,  -3 ) )
+Eu_slice = ( slice( 43, -44 ), slice(  2,  -3 ) )
+Am_slice = ( slice(  2,  -3 ), slice( 18, -19 ) )
+Monazu_slice = ( slice( 47, -48 ), slice( 2, -3 ) )
+
 class AnalysisImage:
     def __init__(self, path):
         self.gray_img = cv2.cvtColor( cv2.imread(path) , cv2.COLOR_BGR2GRAY)[10:-10, 20:-20]
-        self.binary   = None
         
         self.num       = 0
         self.area      = np.array([])
@@ -16,9 +23,12 @@ class AnalysisImage:
         self.rect      = []
         self.ratio     = np.array([])
 
+    def load_data(self, path, source_slice):
+        self.gray_img = cv2.cvtColor( cv2.imread(path) , cv2.COLOR_BGR2GRAY)[10:-10, 20:-20]
+
     def analyze(self, threshold = 5):
-        ret, self.binary = cv2.threshold(self.gray_img, threshold, 255, cv2.THRESH_BINARY)
-        contours, hierarchy = cv2.findContours(self.binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+        ret, binary = cv2.threshold(self.gray_img, threshold, 255, cv2.THRESH_BINARY)
+        contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
         self.num = len( contours )
         tmp_area         = []
@@ -62,15 +72,21 @@ class AnalysisImage:
         plt.imshow(img_disp)
         plt.show()        
         
-# a = glob.glob("./*.tiff")
-# Sr = AnalysisImage( a[1] )
+a = glob.glob("./data/22Na/*.tiff")
+Sr = AnalysisImage( a[0] )
+print(Sr.gray_img)
 # Sr.analyze(10)
 # Sr.rect_plot(500)
 
-img = cv2.imread("152Eu_240.tiff")
-img2 = cv2.imread("batch0-i49.tiff")
+# b = slice( Sr_offset, Sr_offset+1 )
+c = slice( 0, 5 )
 
-print( np.all( img == img2 ) )
+# print( Sr.gray_img[ b, c ] )
+
+a = np.linspace(0, 10, 11)
+print(a[c])
+print(a[0:5])
+print(Na_slice)
 
 # def rotate(data, theta):
 #     theta = np.deg2rad(theta)
