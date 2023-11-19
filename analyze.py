@@ -97,15 +97,15 @@ class AnalysisImage:
     #     plt.imshow(img_disp)
     #     plt.show()        
 
-test_slice = slice( 0, 1 )     
+test_slice = slice( 0, 6 )     
 img_threshold = 15
 Na_pathlist = glob.glob("./data/22Na/*.tiff")
 Na = AnalysisImage( Na_pathlist[test_slice], Na_slice )
 Na.analyze(img_threshold)
 
-# Co_pathlist = glob.glob("./data/60Co/*.tiff")
-# Co = AnalysisImage( Co_pathlist[test_slice], Co_slice )
-# Co.analyze(img_threshold)
+Co_pathlist = glob.glob("./data/60Co/*.tiff")
+Co = AnalysisImage( Co_pathlist[test_slice], Co_slice )
+Co.analyze(img_threshold)
 
 Sr_pathlist = glob.glob("./data/90Sr/*.tiff")
 Sr = AnalysisImage( Sr_pathlist[test_slice], Sr_slice )
@@ -190,6 +190,11 @@ dataset1 = np.array([
     Na.arc_len,
     Na.luminance
 ]).T
+# dataset1 = np.array([
+#     Co.area,
+#     Co.arc_len,
+#     Co.luminance
+# ]).T
 dataset2 = np.array([
     Sr.area,
     Sr.arc_len,
@@ -202,6 +207,7 @@ dataset3 = np.array([
 ]).T
 
 ans1 = np.full_like( Na.area, 0 )
+# ans1 = np.full_like( Co.area, 0 )
 ans2 = np.full_like( Sr.area, 1 )
 ans3 = np.full_like( Am.area, 2 )
 
@@ -212,8 +218,9 @@ x_train, x_valid, t_train, t_valid = train_test_split(dataset, ans, test_size=0.
 
 # モデルの定義
 model = Sequential([
-    Dense(units=10, activation='relu', input_dim=3),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
-    Dense(units=10, activation='relu'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    Dense(units=10, activation='softsign', input_dim=3),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    Dense(units=20, activation='elu'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    Dense(units=10, activation='elu'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
     Dense(units=3, activation='softmax')  # ノード数が1の層を追加。活性化関数はシグモイド関数。
 ])
 
@@ -226,8 +233,8 @@ history = model.fit(
     x=x_train,
     y=t_train,
     validation_data=(x_valid, t_valid),
-    batch_size=2**4,  # バッチサイズ。一回のステップで全てのデータを使うようにする。
-    epochs=1000,  # 学習のステップ数
+    batch_size=2**10,  # バッチサイズ。一回のステップで全てのデータを使うようにする。
+    epochs=2000,  # 学習のステップ数
     verbose=0,  # 1とするとステップ毎に誤差関数の値などが表示される
     callbacks=es,  # ここでコールバックを指定します。
 )
