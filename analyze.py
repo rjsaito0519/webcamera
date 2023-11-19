@@ -97,7 +97,7 @@ class AnalysisImage:
     #     plt.imshow(img_disp)
     #     plt.show()        
 
-test_slice = slice( 0, 5 )     
+test_slice = slice( 0, 1 )     
 img_threshold = 15
 Na_pathlist = glob.glob("./data/22Na/*.tiff")
 Na = AnalysisImage( Na_pathlist[test_slice], Na_slice )
@@ -123,9 +123,9 @@ Am_pathlist = glob.glob("./data/241Am/*.tiff")
 Am = AnalysisImage( Am_pathlist[test_slice], Am_slice )
 Am.analyze(img_threshold)
 
-# Monazu_pathlist = glob.glob("./data/Monazu/*.tiff")
-# Monazu = AnalysisImage( Monazu_pathlist[test_slice], Monazu_slice )
-# Monazu.analyze(img_threshold)
+Monazu_pathlist = glob.glob("./data/Monazu/*.tiff")
+Monazu = AnalysisImage( Monazu_pathlist[test_slice], Monazu_slice )
+Monazu.analyze(img_threshold)
 
 # fig = plt.figure(figsize= (8, 8))
 # ax = fig.add_subplot(1, 1, 1)
@@ -232,9 +232,11 @@ history = model.fit(
     callbacks=es,  # ここでコールバックを指定します。
 )
 
-loss_train = history.history['loss']
-loss_valid = history.history['val_loss']
+# モデルの保存
+model.save(filepath='test_model.h5', save_format='h5')
 
+# loss_train = history.history['loss']
+# loss_valid = history.history['val_loss']
 # # ロス関数の推移をプロット
 # plt.plot(loss_train, label='loss (train)')
 # plt.plot(loss_valid, label='loss (valid)')
@@ -249,3 +251,12 @@ plt.yscale("log")
 plt.show()
 result_batchnorm[['accuracy', 'val_accuracy']].plot()
 plt.show()
+
+
+dataset4 = np.array([
+    Monazu.area,
+    Monazu.arc_len,
+    Monazu.luminance
+]).T
+pred_data = model.predict(dataset4)
+print(pred_data)
