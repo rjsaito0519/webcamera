@@ -135,17 +135,17 @@ dataset4 = np.array([
 #     Co.luminance
 # ]).T
 
-# dataset4 = np.array([
-#     Eu.area,
-#     Eu.arc_len,
-#     Eu.luminance
-# ]).T
+dataset4 = np.array([
+    Eu.area,
+    Eu.arc_len,
+    Eu.luminance
+]).T
 
-# dataset4 = np.array([
-#     Am.area,
-#     Am.arc_len,
-#     Am.luminance
-# ]).T
+dataset4 = np.array([
+    Am.area,
+    Am.arc_len,
+    Am.luminance
+]).T
 
 # dataset4 = np.array([
 #     Ba.area,

@@ -11,7 +11,7 @@ y_slice = slice( y_offset, -1*(y_offset+1) )
 x_slice = slice( x_offset, -1*(x_offset+1) )
 
 
-dir = "./data/133Ba"
+dir = "./data/241Am"
 save_dir = "./data/monazu"
 img_name = "*"
 filepath = glob.glob("{}/{}.tiff".format(dir, img_name))

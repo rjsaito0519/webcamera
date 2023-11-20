@@ -111,9 +111,9 @@ Sr_pathlist = glob.glob("./data/90Sr/*.tiff")
 Sr = AnalysisImage( Sr_pathlist[test_slice], Sr_slice )
 Sr.analyze(img_threshold)
 
-# Ba_pathlist = glob.glob("./data/133Ba/*.tiff")
-# Ba = AnalysisImage( Ba_pathlist[test_slice], Ba_slice )
-# Ba.analyze(img_threshold)
+Ba_pathlist = glob.glob("./data/133Ba/*.tiff")
+Ba = AnalysisImage( Ba_pathlist[test_slice], Ba_slice )
+Ba.analyze(img_threshold)
 
 # Eu_pathlist = glob.glob("./data/152Eu/*.tiff")
 # Eu = AnalysisImage( Eu_pathlist[test_slice], Eu_slice )
@@ -185,16 +185,21 @@ Monazu.analyze(img_threshold)
 
 # plt.show()
 
-dataset1 = np.array([
-    Na.area,
-    Na.arc_len,
-    Na.luminance
-]).T
+# dataset1 = np.array([
+#     Na.area,
+#     Na.arc_len,
+#     Na.luminance
+# ]).T
 # dataset1 = np.array([
 #     Co.area,
 #     Co.arc_len,
 #     Co.luminance
 # ]).T
+dataset1 = np.array([
+    Ba.area,
+    Ba.arc_len,
+    Ba.luminance
+]).T
 dataset2 = np.array([
     Sr.area,
     Sr.arc_len,
@@ -206,8 +211,9 @@ dataset3 = np.array([
     Am.luminance
 ]).T
 
-ans1 = np.full_like( Na.area, 0 )
+# ans1 = np.full_like( Na.area, 0 )
 # ans1 = np.full_like( Co.area, 0 )
+ans1 = np.full_like( Ba.area, 0 )
 ans2 = np.full_like( Sr.area, 1 )
 ans3 = np.full_like( Am.area, 2 )
 
@@ -219,8 +225,10 @@ x_train, x_valid, t_train, t_valid = train_test_split(dataset, ans, test_size=0.
 # モデルの定義
 model = Sequential([
     Dense(units=10, activation='softsign', input_dim=3),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
-    Dense(units=20, activation='elu'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
-    Dense(units=10, activation='elu'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    Dense(units=10, activation='swish'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    # Dense(units=10, activation='softsign'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    Dense(units=10, activation='swish'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
+    # Dense(units=10, activation='softsign'),  # ノード数が3の層を追加。活性化関数はシグモイド関数。
     Dense(units=3, activation='softmax')  # ノード数が1の層を追加。活性化関数はシグモイド関数。
 ])
 
@@ -234,7 +242,7 @@ history = model.fit(
     y=t_train,
     validation_data=(x_valid, t_valid),
     batch_size=2**10,  # バッチサイズ。一回のステップで全てのデータを使うようにする。
-    epochs=2000,  # 学習のステップ数
+    epochs=100,  # 学習のステップ数
     verbose=0,  # 1とするとステップ毎に誤差関数の値などが表示される
     callbacks=es,  # ここでコールバックを指定します。
 )
