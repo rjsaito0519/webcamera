@@ -5,13 +5,13 @@ import numpy as np
 import os
 
 isTest = 1
-y_offset = 44
-x_offset = 2
+y_offset = 2
+x_offset = 47
 y_slice = slice( y_offset, -1*(y_offset+1) )
 x_slice = slice( x_offset, -1*(x_offset+1) )
 
 
-dir = "./data/241Am"
+dir = "./data/Monazu"
 save_dir = "./data/monazu"
 img_name = "*"
 filepath = glob.glob("{}/{}.tiff".format(dir, img_name))
