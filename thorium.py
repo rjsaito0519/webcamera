@@ -23,7 +23,6 @@ plt.rcParams["ytick.major.size"] = 10                #y軸主目盛り線の長�
 plt.rcParams["xtick.minor.size"] = 5                 #x軸補助目盛り線の長さ
 plt.rcParams["ytick.minor.size"] = 5                 #y軸補助目盛り線の長さ
 
-
 def data2hist(data, bin_num = 100, range = None):
     try:
         hist_data, bin = np.histogram(data, bins = bin_num, range = range)

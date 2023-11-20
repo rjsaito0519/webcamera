@@ -7,6 +7,7 @@ import glob
 import pandas as pd
 from tqdm import tqdm
 
+# 写真データのオフセット分を取り除く用のパラメタ
 Na_slice = ( slice( 70, -71 ), slice(  2,  -3 ) )
 Co_slice = ( slice( 70, -71 ), slice(  2,  -3 ) )
 Sr_slice = ( slice( None ),    slice( None ) )
@@ -84,7 +85,7 @@ class AnalysisImage:
 
         return img_num, event_num
 
-    def rect_plot(self, img_num, isSave = False):
+    def rect_plot(self, img_num, save_name = "rect_plot", isSave = False):
         gray_img = self.load_data( self.pathlist[img_num] )
         ret, binary = cv2.threshold(gray_img, self.threshold, 255, cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
@@ -99,13 +100,17 @@ class AnalysisImage:
         ax1.imshow(gray_img)
         fig2 = plt.figure( figsize=( 8, 6 ) )
         ax2 = fig2.add_subplot(111)
-        ax2.imshow(img_disp)
+        ax2.imshow(binary)
+        fig3 = plt.figure( figsize=( 8, 6 ) )
+        ax3 = fig3.add_subplot(111)
+        ax3.imshow(img_disp)
         if isSave:
-            fig1.savefig("img/rect_plot_gray.png", dpi=600, transparent=True)
-            fig2.savefig("img/rect_plot_color.png", dpi=600, transparent=True)
+            fig1.savefig("img/{}_gray.png".format(save_name), dpi=600, transparent=True)
+            fig2.savefig("img/{}_binary.png".format(save_name), dpi=600, transparent=True)
+            fig3.savefig("img/{}}_color.png".format(save_name), dpi=600, transparent=True)
         plt.show()
 
-    def event_plot(self, img_num, event_num, isSave = False):
+    def event_plot(self, img_num, event_num, save_name = "event_plot", isSave = False):
         gray_img = self.load_data( self.pathlist[img_num] )
         ret, binary = cv2.threshold(gray_img, self.threshold, 255, cv2.THRESH_BINARY)
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
@@ -121,5 +126,5 @@ class AnalysisImage:
         ax.set_xlim(np.min( box[:, 0] ) - 5, np.max( box[:, 0] ) + 5)
         ax.set_ylim(np.min( box[:, 1] ) - 5, np.max( box[:, 1] ) + 5)
         if isSave:
-            plt.savefig("img/event_plot.png", dpi=600, transparent=True)
+            plt.savefig("img/{}.png".format(save_name), dpi=600, transparent=True)
         plt.show()
